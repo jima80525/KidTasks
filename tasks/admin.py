@@ -1,47 +1,41 @@
 from django.contrib import admin
 
-from .models import Task, CountedTask, DayOfWeekSchedule, DateSchedule  #, Kid
-#from .models import WeekSchedule, Schedule, HistoricDate, History
-#from .models import Task, Kid, CountedTask, DayOfWeekSchedule, DateSchedule
-#from .models import WeekSchedule, Schedule, HistoricDate, History
+from .models import DayTask, DateTask
+from .models import Task, DayOfWeekSchedule, DateSchedule, Kid
+from .models import Schedule#, HistoricDate, History
 
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('name', 'required')
     fields = [('name', 'required')]
 
-@admin.register(CountedTask)
-class CountedTaskAdmin(admin.ModelAdmin):
-    fields = [('name', 'count', 'required')]
+class DayTaskInline(admin.TabularInline):
+    model = DayTask
+    extra = 1 # how many rows to show
 
 @admin.register(DayOfWeekSchedule)
 class DayOfWeekScheduleAdmin(admin.ModelAdmin):
+    inlines = (DayTaskInline,)
     filter_horizontal = ('tasks', )
     list_display = ('name', 'day_name',  )
-    fields = [('name', 'day_name', 'tasks')]
+    fields = [('name', 'day_name')]
+
+class DateTaskInline(admin.TabularInline):
+    model = DateTask
+    extra = 1 # how many rows to show
 
 @admin.register(DateSchedule)
 class DateScheduleAdmin(admin.ModelAdmin):
+    inlines = (DateTaskInline,)
     filter_horizontal = ('tasks', )
-    fields = [('name', 'tasks', 'date')]
+    fields = [('name', 'date')]
 
-#@admin.register(WeekSchedule)
-#class WeekScheduleAdmin(admin.ModelAdmin):
-    #fields = [('tasks', 'start_date')]
+@admin.register(Schedule)
+class ScheduleAdmin(admin.ModelAdmin):
+    filter_horizontal = ['day_tasks', 'date_tasks', ]
+    fields = [('name', 'day_tasks', 'date_tasks', )]
 
-#@admin.register(Schedule)
-#class ScheduleAdmin(admin.ModelAdmin):
-    #fields = [('name', 'day_tasks', 'date_tasks', 'week_tasks')]
-
-#@admin.register(HistoricDate)
-#class HistoricDateAdmin(admin.ModelAdmin):
-    #fields = [('date', 'tasks', 'counted_tasks')]
-
-#@admin.register(History)
-#class HistoryDateAdmin(admin.ModelAdmin):
-    #fields = [('dates')]
-
-#@admin.register(Kid)
-#class KidAdmin(admin.ModelAdmin):
-    #fields = [('name', 'schedule', 'history')]
+@admin.register(Kid)
+class KidAdmin(admin.ModelAdmin):
+    fields = [('name', 'schedule', )]
 

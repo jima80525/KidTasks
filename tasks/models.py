@@ -10,17 +10,6 @@ class Task(models.Model):
     class Meta:
         ordering = ['name', ]
 
-class CountedTask(models.Model):
-    name = models.CharField(max_length=256)
-    required = models.BooleanField()
-    count = models.IntegerField()
-
-    def __str__(self):
-        return "{} ({:d})".format(self.name, self.count)
-
-    class Meta:
-        ordering = ['name', 'count']
-
 class DayOfWeekSchedule(models.Model):
     day_of_week_choices = (
         ('M', 'Monday'),
@@ -33,7 +22,7 @@ class DayOfWeekSchedule(models.Model):
     )
 
     name = models.CharField(max_length=256)
-    tasks = models.ManyToManyField(Task)
+    tasks = models.ManyToManyField(Task, through='DayTask')
     day_name = models.CharField(max_length=1, choices=day_of_week_choices)
 
     def __str__(self):
@@ -43,10 +32,13 @@ class DayOfWeekSchedule(models.Model):
     class Meta:
         ordering = ['name', 'day_name']
 
+class DayTask(models.Model):
+    task = models.ForeignKey(Task)
+    schedule = models.ForeignKey(DayOfWeekSchedule)
+
 class DateSchedule(models.Model):
-    """ here"""
     name = models.CharField(max_length=256)
-    tasks = models.ManyToManyField(Task)
+    tasks = models.ManyToManyField(Task, through='DateTask')
     date = models.DateField()
 
     def __str__(self):
@@ -55,26 +47,28 @@ class DateSchedule(models.Model):
     class Meta:
         ordering = ['name', 'date']
 
-#class WeekSchedule(models.Model):
-    #tasks = models.ManyToManyField(CountedTask)
-    #start_date = models.DateField()
+class DateTask(models.Model):
+    task = models.ForeignKey(Task)
+    schedule = models.ForeignKey(DateSchedule)
 
-#class Schedule(models.Model):
-    #name = models.CharField(max_length=256)
-    #day_tasks = models.ManyToManyField(DayOfWeekSchedule)
-    #date_tasks = models.ManyToManyField(DateSchedule)
-    #week_tasks = models.ManyToManyField(WeekSchedule)
+class Schedule(models.Model):
+    name = models.CharField(max_length=256)
+    day_tasks = models.ManyToManyField(DayOfWeekSchedule)
+    date_tasks = models.ManyToManyField(DateSchedule)
 
-#class HistoricDate(models.Model):
-    #date = models.DateField()
-    #tasks = models.ManyToManyField(Task)
-    #counted_tasks = models.ManyToManyField(CountedTask)
+    def __str__(self):
+        return "{} Schedule".format(self.name)
 
-#class History(models.Model):
-    #dates = models.ManyToManyField(HistoricDate)
+    class Meta:
+        ordering = ['name', ]
 
-#class Kid(models.Model):
-    #name = models.CharField(max_length=256)
-    #schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
-    #history = models.ForeignKey(History, on_delete=models.CASCADE)
+class Kid(models.Model):
+    name = models.CharField(max_length=256)
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name', ]
 
