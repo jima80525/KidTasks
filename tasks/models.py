@@ -1,4 +1,5 @@
 from django.db import models
+import calendar
 
 class Task(models.Model):
     name = models.CharField(max_length=256)
@@ -11,23 +12,15 @@ class Task(models.Model):
         ordering = ['name', ]
 
 class DayOfWeekSchedule(models.Model):
-    day_of_week_choices = (
-        ('M', 'Monday'),
-        ('T', 'Tuesday'),
-        ('W', 'Wednesday'),
-        ('R', 'Thursday'),
-        ('F', 'Friday'),
-        ('S', 'Saturday'),
-        ('N', 'Sunday'),
-    )
+    day_of_week_choices  = [(calendar.day_name[i], calendar.day_name[i]) for i
+                            in range(0,7)]
 
     name = models.CharField(max_length=256)
     tasks = models.ManyToManyField(Task, through='DayTask')
-    day_name = models.CharField(max_length=1, choices=day_of_week_choices)
+    day_name = models.CharField(max_length=20, choices=day_of_week_choices)
 
     def __str__(self):
-        full_day = dict(self.day_of_week_choices)[self.day_name]
-        return "{}-{}".format(self.name, full_day)
+        return "{}-{}".format(self.name, self.day_name)
 
     class Meta:
         ordering = ['name', 'day_name']
