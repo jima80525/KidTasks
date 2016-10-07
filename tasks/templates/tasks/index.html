@@ -1,26 +1,18 @@
 {% if kids %}
-{% for kid in kids %}
-<h1>{{ kid.name }}</h1>
-    <ul>
-    {% for day_schedule in kid.schedule.day_tasks.all %}
-    {% if day_schedule %}
-    <li>{{ day_schedule.day_name }} </li>
-    <ul>
-      {% for task in day_schedule.tasks.all %}
-        <li>{{ task.name }} </li>
-      {% endfor %}
-    </ul>
-      {% endif %}
-    {% endfor %}
-    {% if date_schedule %}
-      <li>{{ date_schedule.date }} </li>
-      <ul>
-        {% for task in date_schedule.tasks.all %}
-          <li>{{ task.name }} </li>
+    {% for kid in kids %}
+        <h1>{{ kid.name }}</h1>
+        <ul>
+        {% for day_schedule in kid.day_schedules.all %}
+            {% if day_schedule %}
+                <li>{{ day_schedule.day_name }} </li>
+                <ul>
+                {% for task in day_schedule.tasks.all %}
+                    <li>{{ task.name }} </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
         {% endfor %}
-      </ul>
-      {% endif %}
-      </ul>
+        </ul>
     {% endfor %}
 {% else %}
     <p>No kids are present.</p>

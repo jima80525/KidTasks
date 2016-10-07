@@ -1,0 +1,20 @@
+{% if kids %}
+    {% for name, tasks in kids.items %}
+        <h1>{{ name }} on {{ day }}</h1>
+        {% if tasks %}
+            <ul>
+            {% for task in tasks %}
+                <li><a href="{% url 'update' task.id %}">
+                {% if task.completed %} <strike> {% endif %}
+                    {{ task.name }}
+                {% if task.completed %} </strike> {% endif %}
+                </a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tasks for {{ name }}.</p>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <p>No kids are present.</p>
+{% endif %}
