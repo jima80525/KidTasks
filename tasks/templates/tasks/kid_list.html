@@ -1,6 +1,8 @@
+{% block content %}
 {% if kids %}
-    {% for kid in kids %}
-        <h1>{{ kid.name }}</h1>
+    <ul>
+        {% for kid in object_list %}
+            <h1>{{ kid.name }}</h1>
         <ul>
         {% for day_schedule in kid.day_schedules.all %}
             {% if day_schedule %}
@@ -13,7 +15,9 @@
             {% endif %}
         {% endfor %}
         </ul>
-    {% endfor %}
+        {% endfor %}
+    </ul>
 {% else %}
     <p>No kids are present.</p>
 {% endif %}
+{% endblock %}

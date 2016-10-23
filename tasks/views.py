@@ -4,7 +4,13 @@ import datetime
 from django.shortcuts import get_object_or_404, get_list_or_404, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.views.generic import ListView
 from .models import Kid, DateTask
+
+
+class FullList(ListView):
+    """ Shows all of the tasks in the system, broken down by kid """
+    model = Kid
 
 
 def update_task(_, task_id):
@@ -22,9 +28,3 @@ def today(request):
 
     kids = {kid.name: kid.build_today() for kid in kid_list}
     return render(request, 'tasks/today.html', {'kids': kids, 'day': day_name})
-
-
-def index(request):
-    """ Shows all of the tasks in the system, broken down by kid """
-    kids = get_list_or_404(Kid)
-    return render(request, 'tasks/index.html', {'kids': kids})
