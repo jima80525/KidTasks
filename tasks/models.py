@@ -68,6 +68,37 @@ class Kid(models.Model):
     class Meta:
         ordering = ['name', ]
 
+    def build_today(self, day_name=None):
+        """ Checks the kid's date_tasks.  If empty, it creates a new date task
+        for each task in the kid's day_schedules for today.  Either way, it
+        returns a vector of DateTasks from the kid.date_tasks list.
+        NOTE: this still needs to be redesigned to create history list from
+        old today list."""
+
+        current_date = str(datetime.datetime.now())[:10]
+        day_name = day_name or datetime.datetime.now().strftime("%A")
+        # need to purge date_tasks if date doesn't match today
+        # NOTE: this is not ideal.  We need to figure out how we want to store
+        # history as opposed to 'today's tasks'
+        if self.date_tasks.exists():
+            existing_task = self.date_tasks.all().first()
+            existing_date = str(existing_task.date)[:10]
+            if current_date != existing_date:
+                self.date_tasks.clear()
+
+        if not self.date_tasks.exists():
+            for schd in self.day_schedules.filter(day_name=day_name).order_by(
+                            "id"):
+                for task in schd.tasks.all():
+                    date_task = DateTask(name=task.name,
+                                         required=task.required)
+                    date_task.save()
+                    d2k = DateToKid(task=date_task, kid=self)
+                    d2k.save()
+
+        return [task for task in
+                self.date_tasks.filter(date=current_date).order_by("id")]
+
 
 class DateToKid(models.Model):
     """ Intermediary model to join DateTasks and Kids """
