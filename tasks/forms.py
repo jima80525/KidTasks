@@ -1,10 +1,9 @@
 from django import forms
 
-#from .models import DayOfWeekSchedule
+from .models import RepeatingTask
 
 class TaskForm(forms.ModelForm):
-    pass
-
-    #class Meta:
-        #model = DayOfWeekSchedule
-        #fields = ('name', 'day_name', 'tasks',)
+    class Meta:
+        model = RepeatingTask
+        fields = ('name', 'kid', 'monday', 'tuesday', 'wednesday', 'thursday',
+                  'friday', 'saturday', 'sunday',)

@@ -1,23 +1,33 @@
 {% block content %}
-{% if object_list %}
+{% if kids %}
     <ul>
-        {% for kid in object_list %}
-            <h1>{{ kid.name }}</h1>
-        <ul>
-        {% for day_schedule in kid.day_schedules.all %}
-            {% if day_schedule %}
-                <li>{{ day_schedule.day_name }} </li>
+        {% for kid, days in kids.items %}
+            <h1>{{ kid }}</h1>
+            <ul>
+            {% for day, tasks in days %}
+                <li>{{ day }}</li>
+
                 <ul>
-                {% for task in day_schedule.tasks.all %}
-                    <li>{{ task.name }} </li>
+                {% for task in tasks %}
+                    <li><a href="{% url 'rep_task_update' task.id %}">
+                        {{ task.name }}
+                    </a></li>
                 {% endfor %}
                 </ul>
-            {% endif %}
-        {% endfor %}
-        </ul>
+
+
+            {% endfor %}
+            </ul>
+
         {% endfor %}
     </ul>
 {% else %}
     <p>No kids are present.</p>
 {% endif %}
+<form action="{% url 'rep_task_new' %}" method="get">
+{% csrf_token %}
+<input type="submit" value="Add New Repeating Task" />
+</form>
+
 {% endblock %}
+

@@ -1,7 +1,8 @@
 
 {% block content %}
-    <h1>New task</h1>
+    <h1>Create Task</h1>
     <form method="POST" class="task-form">{% csrf_token %}
+        {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
