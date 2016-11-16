@@ -54,7 +54,7 @@ def update_repeating_task(request, task_id):
                 form.save()
             # ignore if the cancel button was pressed
             return redirect(reverse('index'))
-    return render(request, 'tasks/task_update.html', {'form': form })
+    return render(request, 'tasks/task_update.html', {'form': form})
 
 
 def today(request):
@@ -64,8 +64,8 @@ def today(request):
     kids = dict()
     for kid in kid_list:
         kid.populate_today()  # get RepeatingTasks set up for today
-        task_list = Task.objects.filter(kid=kid).\
-                filter(date=datetime.datetime.today())
+        task_list = Task.objects.filter(kid=kid). \
+            filter(date=datetime.datetime.today())
         if task_list:
             kids[kid.name] = [task for task in task_list]
 
@@ -80,13 +80,12 @@ def update_task(_, task_id):
     return HttpResponseRedirect(reverse('today'))
 
 
-#def task_new(request):
-    #if request.method == "POST":
-        #form = TaskForm(request.POST)
-        #if form.is_valid():
-            #form.save()
-            #return redirect(reverse('today'))
-    #else:
-        #form = TaskForm()
-    #return render(request, 'tasks/task_edit.html', {'form': form})
-
+# def task_new(request):
+# if request.method == "POST":
+# form = TaskForm(request.POST)
+# if form.is_valid():
+# form.save()
+# return redirect(reverse('today'))
+# else:
+# form = TaskForm()
+# return render(request, 'tasks/task_edit.html', {'form': form})

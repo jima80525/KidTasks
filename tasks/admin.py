@@ -21,7 +21,7 @@ class KidAdmin(admin.ModelAdmin):
 @admin.register(RepeatingTask)
 class RepeatingTaskAdmin(admin.ModelAdmin):
     """ Format admin page for Tasks """
-    list_display = ('name', 'kid', 'monday', 'tuesday', 'wednesday', 'thursday',
-                   'friday', 'saturday', 'sunday')
-    fields = [('name', 'kid', 'monday', 'tuesday', 'wednesday', 'thursday',
-               'friday', 'saturday', 'sunday' )]
+    list_display = ('name', 'kid', 'monday', 'tuesday', 'wednesday',
+                    'thursday', 'friday', 'saturday', 'sunday')
+    fields = [('name', 'kid', 'monday', 'tuesday', 'wednesday',
+               'thursday', 'friday', 'saturday', 'sunday')]

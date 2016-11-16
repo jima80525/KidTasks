@@ -2,6 +2,7 @@ from django import forms
 
 from .models import RepeatingTask
 
+
 class TaskForm(forms.ModelForm):
     class Meta:
         model = RepeatingTask

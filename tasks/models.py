@@ -30,22 +30,19 @@ class Kid(models.Model):
         # http://stackoverflow.com/questions/4720079/django-query-filter-with-\
         # variable-column
         for day in self.days:
-            qs = RepeatingTask.objects.filter(kid=self).filter(**{ day : True })
+            qs = RepeatingTask.objects.filter(kid=self).filter(**{day: True})
             tasks.append((day, [task for task in qs]))
         return tasks
 
     def populate_today(self):
         """ Create new Tasks from Repeating tasks matching today's day of the
         week."""
-        # get today's date, and then convert to a datetime in order to get
-        # zeros for other values.  That ensure's we're comparing dates correctly
-        # and
         current_date = datetime.date.today()
         day_name = datetime.datetime.now().strftime("%A").lower()
         if current_date > self.last_update_date:
             print("updating {0}".format(self.name))
-            for rep_task in RepeatingTask.objects.filter(kid=self) \
-                            .filter(**{ day_name : True }):
+            for rep_task in RepeatingTask.objects.filter(kid=self).filter(
+                    **{day_name: True}):
                 print(rep_task)
                 date_task = Task(name=rep_task, date=current_date, kid=self)
                 date_task.save()
