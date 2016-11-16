@@ -6,6 +6,7 @@ from django.db import models
 class Kid(models.Model):
     """ Defines the kids which have to do the tasks. """
     name = models.CharField(max_length=256)
+    last_update_date = models.DateField(default=datetime.datetime.today)
     days = [
         'monday',
         'tuesday',
@@ -33,12 +34,30 @@ class Kid(models.Model):
             tasks.append((day, [task for task in qs]))
         return tasks
 
+    def populate_today(self):
+        """ Create new Tasks from Repeating tasks matching today's day of the
+        week."""
+        # get today's date, and then convert to a datetime in order to get
+        # zeros for other values.  That ensure's we're comparing dates correctly
+        # and
+        current_date = datetime.date.today()
+        day_name = datetime.datetime.now().strftime("%A").lower()
+        if current_date > self.last_update_date:
+            print("updating {0}".format(self.name))
+            for rep_task in RepeatingTask.objects.filter(kid=self) \
+                            .filter(**{ day_name : True }):
+                print(rep_task)
+                date_task = Task(name=rep_task, date=current_date, kid=self)
+                date_task.save()
+            self.last_update_date = current_date
+            self.save()
+
 
 class Task(models.Model):
     """ A Task is associated with a kid and a date.  This is the actual thing
     the kid has to do! """
     name = models.CharField(max_length=256)
-    completed = models.BooleanField()
+    completed = models.BooleanField(default=False)
     date = models.DateField(default=datetime.datetime.now)
     kid = models.ForeignKey(Kid)
 

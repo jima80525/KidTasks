@@ -14,8 +14,8 @@ class TaskAdmin(admin.ModelAdmin):
 @admin.register(Kid)
 class KidAdmin(admin.ModelAdmin):
     """ Format admin page for Kid """
-    list_display = ('name', )
-    fields = [('name', )]
+    list_display = ('name', 'last_update_date', )
+    fields = [('name', 'last_update_date',)]
 
 
 @admin.register(RepeatingTask)

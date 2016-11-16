@@ -6,8 +6,7 @@ from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import ListView
-from django.forms.models import inlineformset_factory
-from .models import Kid, RepeatingTask
+from .models import Kid, RepeatingTask, Task
 from .forms import TaskForm
 
 
@@ -25,6 +24,7 @@ class FullList(ListView):
         # create a dict with an index for each kid.  The value associated with
         # the kid will be a list of tuples:
         #     (day_name [list of tasks for that day])
+        # JHA TODO make this a list so it's ordered
         kids = {}
         for kid in kid_list:
             kids[kid.name] = kid.build_all_tasks()
@@ -57,30 +57,27 @@ def update_repeating_task(request, task_id):
     return render(request, 'tasks/task_update.html', {'form': form })
 
 
-#class TodayList(ListView):
-    #""" Generate the 'today' page showing which tasks are due today """
-    #model = Kid
-    #template_name = 'tasks/today.html'
+def today(request):
+    """ Generate the 'today' page showing which tasks are due today """
+    day_name = datetime.datetime.now().strftime("%A")
+    kid_list = get_list_or_404(Kid.objects.order_by('name'))
+    kids = dict()
+    for kid in kid_list:
+        kid.populate_today()  # get RepeatingTasks set up for today
+        task_list = Task.objects.filter(kid=kid).\
+                filter(date=datetime.datetime.today())
+        if task_list:
+            kids[kid.name] = [task for task in task_list]
 
-    #def get_context_data(self, **kwargs):
-        # get_context_data creates the context
-        #context = ListView.get_context_data(self, **kwargs)
-
-        #day_name = datetime.datetime.now().strftime("%A")
-        #kid_list = get_list_or_404(Kid.objects.order_by('name'))
-
-        #kids = {kid.name: kid.build_today() for kid in kid_list}
-        #context.update({'kids': kids, 'day': day_name})
-
-        #return context
+    return render(request, 'tasks/today.html', {'kids': kids, 'day': day_name})
 
 
-#def update_task(_, task_id):
-    #""" Invert the completed state of the specified task """
-    #date_task = get_object_or_404(DateTask, id=task_id)
-    #date_task.completed = not date_task.completed
-    #date_task.save()
-    #return HttpResponseRedirect(reverse('today'))
+def update_task(_, task_id):
+    """ Invert the completed state of the specified task """
+    task = get_object_or_404(Task, id=task_id)
+    task.completed = not task.completed
+    task.save()
+    return HttpResponseRedirect(reverse('today'))
 
 
 #def task_new(request):
