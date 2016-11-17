@@ -7,14 +7,11 @@
             {% for day, tasks in days %}
                 <li>{{ day }}</li>
 
-                <ul>
+                <ul><li>
                 {% for task in tasks %}
-                    <li><a href="{% url 'rep_task_update' task.id %}">
-                        {{ task.name }}
-                    </a></li>
+                    <a href="{% url 'rep_task_update' task.id %}"> {{ task.name }}, </a>
                 {% endfor %}
-                </ul>
-
+                </li></ul>
 
             {% endfor %}
             </ul>
@@ -24,10 +21,8 @@
 {% else %}
     <p>No kids are present.</p>
 {% endif %}
-<form action="{% url 'rep_task_new' %}" method="get">
-{% csrf_token %}
-<input type="submit" value="Add New Repeating Task" />
-</form>
+<br/> <a href="{% url 'rep_task_new' %}">Add New Repeating Task</a>
+<br/> <a href="{% url 'today' %}">View Today's Tasks</a>
 
 {% endblock %}
 

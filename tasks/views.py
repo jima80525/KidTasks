@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import ListView
 from .models import Kid, RepeatingTask, Task
-from .forms import TaskForm
+from .forms import RepeatingTaskForm, TaskForm
 
 
 class FullList(ListView):
@@ -25,6 +25,8 @@ class FullList(ListView):
         # the kid will be a list of tuples:
         #     (day_name [list of tasks for that day])
         # JHA TODO make this a list so it's ordered
+        # https://docs.djangoproject.com/en/dev/howto/custom-template-
+        # tags/#howto-custom-template-tags
         kids = {}
         for kid in kid_list:
             kids[kid.name] = kid.build_all_tasks()
@@ -34,18 +36,18 @@ class FullList(ListView):
 
 def new_repeating_task(request):
     if request.method == "POST":
-        form = TaskForm(request.POST)
+        form = RepeatingTaskForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect(reverse('index'))
     else:
-        form = TaskForm()
-    return render(request, 'tasks/task_edit.html', {'form': form})
+        form = RepeatingTaskForm()
+    return render(request, 'tasks/repeating_task_edit.html', {'form': form})
 
 
 def update_repeating_task(request, task_id):
     task = get_object_or_404(RepeatingTask, id=task_id)
-    form = TaskForm(request.POST or None, instance=task)
+    form = RepeatingTaskForm(request.POST or None, instance=task)
     if request.method == "POST":
         if form.is_valid():
             if 'delete' in request.POST:
@@ -54,7 +56,7 @@ def update_repeating_task(request, task_id):
                 form.save()
             # ignore if the cancel button was pressed
             return redirect(reverse('index'))
-    return render(request, 'tasks/task_update.html', {'form': form})
+    return render(request, 'tasks/repeating_task_update.html', {'form': form})
 
 
 def today(request):
@@ -80,12 +82,12 @@ def update_task(_, task_id):
     return HttpResponseRedirect(reverse('today'))
 
 
-# def task_new(request):
-# if request.method == "POST":
-# form = TaskForm(request.POST)
-# if form.is_valid():
-# form.save()
-# return redirect(reverse('today'))
-# else:
-# form = TaskForm()
-# return render(request, 'tasks/task_edit.html', {'form': form})
+def new_task(request):
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('today'))
+    else:
+        form = TaskForm()
+    return render(request, 'tasks/task_edit.html', {'form': form})
