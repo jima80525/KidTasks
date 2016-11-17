@@ -1,3 +1,5 @@
+{% block content %}
+<h1>Today's Tasks</h1>
 {% if kids %}
     {% for name, tasks in kids.items %}
         <h1>{{ name }} on {{ day }}</h1>
@@ -21,3 +23,4 @@
 <br/> <a href="{% url 'task_new' %}">Add New Task</a>
 <br/> <a href="{% url 'rep_task_new' %}">Add New Repeating Task</a>
 <br/> <a href="{% url 'index' %}">See All Repeating Tasks</a>
+{% endblock %}
