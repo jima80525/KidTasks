@@ -1,13 +1,14 @@
+{% load tasks_extras %}
 {% block content %}
 <h1>Repeating Tasks</h1>
 {% if kids %}
     <ul>
-        {% for kid, days in kids.items %}
+        {% for kid, days in kids.items|sort %}
             <h1>{{ kid }}</h1>
             <ul>
             {% for day, tasks in days %}
-                <li>{{ day }}</li>
 
+                <li>{{ day }}</li>
                 <ul><li>
                 {% for task in tasks %}
                     <a href="{% url 'rep_task_update' task.id %}"> {{ task.name }}, </a>
