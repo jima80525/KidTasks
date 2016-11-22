@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import RepeatingTask, Task
+from .models import RepeatingTask, Task, Kid
 
 
 class RepeatingTaskForm(forms.ModelForm):
@@ -14,3 +14,9 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ('name', 'completed', 'date', 'kid',)
+
+
+class KidForm(forms.ModelForm):
+    class Meta:
+        model = Kid
+        fields = ('name', 'last_update_date',)
