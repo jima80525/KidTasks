@@ -1,13 +1,24 @@
 """ Django views for the KidsTasks app. """
 import datetime
 # pylint: disable=E0401
-from django.shortcuts import get_object_or_404, get_list_or_404, render
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import ListView
 from .models import Kid, RepeatingTask, Task
 from .forms import RepeatingTaskForm, TaskForm
+
+
+def get_list_of_kids():
+    """ Get the list of kids from the database.  Don't use get_list_or_404 here
+    in order to catch the case of a new DB where no kids are defined."""
+    try:
+        kid_list = Kid.objects.get(name='name')
+    except Kid.DoesNotExist:
+        kid_list = []
+
+    return kid_list
 
 
 class FullList(ListView):
@@ -18,17 +29,11 @@ class FullList(ListView):
         # get_context_data creates the context
         context = ListView.get_context_data(self, **kwargs)
 
-        # Get the list of kids
-        kid_list = get_list_or_404(Kid.objects.order_by('name'))
-
         # create a dict with an index for each kid.  The value associated with
         # the kid will be a list of tuples:
         #     (day_name [list of tasks for that day])
-        # JHA TODO make this a list so it's ordered
-        # https://docs.djangoproject.com/en/dev/howto/custom-template-
-        # tags/#howto-custom-template-tags
         kids = {}
-        for kid in kid_list:
+        for kid in get_list_of_kids():
             kids[kid.name] = kid.build_all_tasks()
         context.update({'kids': kids, })
         return context
@@ -62,9 +67,9 @@ def update_repeating_task(request, task_id):
 def today(request):
     """ Generate the 'today' page showing which tasks are due today """
     day_name = datetime.datetime.now().strftime("%A")
-    kid_list = get_list_or_404(Kid.objects.order_by('name'))
+
     kids = dict()
-    for kid in kid_list:
+    for kid in get_list_of_kids():
         kid.populate_today()  # get RepeatingTasks set up for today
         task_list = Task.objects.filter(kid=kid). \
             filter(date=datetime.datetime.today())
