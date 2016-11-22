@@ -35,11 +35,30 @@ def new_repeating_task(request):
     if request.method == "POST":
         form = RepeatingTaskForm(request.POST)
         if form.is_valid():
-            form.save()
+            # get the kid out of the cleaned data and make sure that it updates
+            # the "today" list with this new task if necessary
+            kid = form.cleaned_data['kid']
+            # make sure that the kid has repeating tasks moved to "today" tasks
+            # before we try to update with the newly created task.  We need to
+            # do this as a two-step process to avoid a curious bug.  If the kid
+            # has already had today populated, then this will be a no-op and
+            # the update_with_new call will work OK.  If it has NOT been called
+            # then, if we don't do this first, we end up with two copies of
+            # the repeated task for today
+            kid.populate_today()
+
+            new_task = form.save()
+            kid.update_with_new_repeating_task(new_task, form.cleaned_data)
+
+            # redirect to the page we were on before
+            next = request.GET.get('next', None)
+            if next:
+                return redirect(next)
             return redirect(reverse('rep_tasks'))
     else:
         form = RepeatingTaskForm()
-    return render(request, 'tasks/repeating_task_edit.html', {'form': form})
+    return render(request, 'tasks/repeating_task_edit.html',
+                  {'form': form, 'from': request.GET.get('from', None)})
 
 
 def update_repeating_task(request, task_id):
@@ -84,10 +103,15 @@ def new_task(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             form.save()
+            next = request.GET.get('next', None)
+            if next:
+                return redirect(next)
+            # if for some reason it was not set, default to today
             return redirect(reverse('today'))
     else:
         form = TaskForm()
-    return render(request, 'tasks/task_edit.html', {'form': form})
+    return render(request, 'tasks/task_edit.html',
+                  {'form': form, 'from': request.GET.get('from', None)})
 
 
 def new_kid(request):

@@ -40,14 +40,23 @@ class Kid(models.Model):
         current_date = datetime.date.today()
         day_name = datetime.datetime.now().strftime("%A").lower()
         if current_date > self.last_update_date:
-            print("updating {0}".format(self.name))
             for rep_task in RepeatingTask.objects.filter(kid=self).filter(
                     **{day_name: True}):
-                print(rep_task)
-                date_task = Task(name=rep_task, date=current_date, kid=self)
+                date_task = Task(name=rep_task.name, date=current_date,
+                                 kid=self)
                 date_task.save()
             self.last_update_date = current_date
             self.save()
+
+    def update_with_new_repeating_task(self, new_task, cleaned_data):
+        """ Adds a new dated task to the list IF the newly created repeating
+        task is for today. Uses the cleaned data from the form to provide
+        a handy dict for day names."""
+        current_date = datetime.date.today()
+        day_name = datetime.datetime.now().strftime("%A").lower()
+        if cleaned_data[day_name]:
+            date_task = Task(name=new_task.name, date=current_date, kid=self)
+            date_task.save()
 
 
 class Task(models.Model):

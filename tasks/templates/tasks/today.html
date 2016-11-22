@@ -20,8 +20,8 @@
 {% else %}
     <p>No kids are present.</p>
 {% endif %}
-<br/> <a href="{% url 'task_new' %}">Add New Task</a>
-<br/> <a href="{% url 'rep_task_new' %}">Add New Repeating Task</a>
-<br/> <a href="{% url 'rep_tasks' %}">See All Repeating Tasks</a>
+<br/> <a href="{% url 'task_new' %}?from={{ request.path|urlencode }}">Add New Task</a>
+<br/> <a href="{% url 'rep_task_new' %}?from={{ request.path|urlencode }}">Add New Repeating Task</a>
 <br/> <a href="{% url 'kid_new' %}?from={{ request.path|urlencode }}">Add New Kid</a>
+<br/> <a href="{% url 'rep_tasks' %}">See All Repeating Tasks</a>
 {% endblock %}

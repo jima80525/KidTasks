@@ -1,7 +1,7 @@
 
 {% block content %}
     <h1>Update or Delete Task</h1>
-    <form method="POST" class="task-form">{% csrf_token %}
+    <form method="POST" class="task-form">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" name="save" value=True class="save btn btn-default">Save</button>
