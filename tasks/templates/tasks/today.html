@@ -1,5 +1,9 @@
+{% extends 'tasks/base.html' %}
+
+{% block title %} Today's Tasks {% endblock %}
+
 {% block content %}
-<h1>Today's Tasks</h1>
+<body>
 {% if kids %}
     {% for name, tasks in kids.items %}
         <h1>{{ name }} on {{ day }}</h1>
@@ -20,8 +24,5 @@
 {% else %}
     <p>No kids are present.</p>
 {% endif %}
-<br/> <a href="{% url 'task_new' %}?from={{ request.path|urlencode }}">Add New Task</a>
-<br/> <a href="{% url 'rep_task_new' %}?from={{ request.path|urlencode }}">Add New Repeating Task</a>
-<br/> <a href="{% url 'kid_new' %}?from={{ request.path|urlencode }}">Add New Kid</a>
-<br/> <a href="{% url 'rep_tasks' %}">See All Repeating Tasks</a>
+</body>
 {% endblock %}

@@ -1,11 +1,13 @@
+{% extends 'tasks/base.html' %}
+
+{% block title %} Update or Delete Task {% endblock %}
 
 {% block content %}
-    <h1>Update or Delete Task</h1>
     <form method="POST" class="task-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" name="save" value=True class="save btn btn-default">Save</button>
-        <button type="submit" name="delete" value=True class="save btn btn-default">Delete</button>
+        <button type="submit" name="save" value=True class="save btn btn-primary">Save</button>
+        <button type="submit" name="delete" value=True class="save btn btn-danger">Delete</button>
         <button type="submit" name="cancel" value=True class="save btn btn-default">Cancel</button>
     </form>
 {% endblock %}
