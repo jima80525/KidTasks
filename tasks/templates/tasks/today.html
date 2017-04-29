@@ -1,28 +1,38 @@
 {% extends 'tasks/base.html' %}
 
-{% block title %} Today's Tasks {% endblock %}
+{% block title %} Tasks For {{ day }}{% endblock %}
 
 {% block content %}
-<body>
 {% if kids %}
-    {% for name, tasks in kids.items %}
-        <h1>{{ name }} on {{ day }}</h1>
-        {% if tasks %}
-            <ul>
+    <div class="table-responsive">
+       <table class="table">
+         {% for name, tasks in kids.items %}
+         {% if tasks %}
+         <tr>
+            <td  class="col-md-1 kidname">{{ name }}</td>
             {% for task in tasks %}
-                <li><a href="{% url 'update' task.id %}">
-                {% if task.completed %} <strike> {% endif %}
-                    {{ task.name }}
-                {% if task.completed %} </strike> {% endif %}
-                </a></li>
-            {% endfor %}
-            </ul>
-        {% else %}
-            <p>No tasks for {{ name }}.</p>
-        {% endif %}
-    {% endfor %}
+            <td class="col-md-1">
+                <div id="taskbutton">
+                   <input type="button"
+                   {% if task.completed %}
+                      class="btn btn-success"
+                   {% else %}
+                      class="btn btn-danger"
+                   {% endif %}
+                      value="{{ task.name }}"
+                      onclick="location.href = '{% url 'update' task.id %}';"
+                   >
+                </div>
+             </td>
+             {% endfor %}
+             <!-- Add empty element to take up rest of the row - this right aligns -->
+             <td  class=""></td>
+         </tr>
+         {% endif %}
+         {% endfor %}
+       </table>
+    </div>
 {% else %}
     <p>No kids are present.</p>
 {% endif %}
-</body>
 {% endblock %}

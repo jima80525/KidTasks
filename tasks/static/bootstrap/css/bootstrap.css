@@ -1,6 +1,16 @@
 @import url("superhero.min.css");
 
-body {
-  background-color: green;
+.navbar {
+  background-color: Purple;
 }
 
+body {
+  background-color: indigo;
+}
+
+#taskbutton .btn {
+   font-size: 30px;
+}
+.kidname {
+   font-size: 30px;
+}
