@@ -1,13 +1,26 @@
 {% extends 'tasks/base.html' %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
 
 {% block title %} Update or Delete Task {% endblock %}
 
 {% block content %}
     <form method="POST" class="task-form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" name="save" value=True class="save btn btn-primary">Save</button>
-        <button type="submit" name="delete" value=True class="save btn btn-danger">Delete</button>
-        <button type="submit" name="cancel" value=True class="save btn btn-default">Cancel</button>
+        {% bootstrap_form form %}
+        {% buttons %}
+          <button type="submit" name="save" value=True class="btn btn-success">
+            {% bootstrap_icon "pencil" %} Save
+          </button>
+          <button type="submit" name="delete" value=True class="btn btn-danger">
+            {% bootstrap_icon "trash" %} Delete
+          </button>
+          <button type="submit" name="cancel" value=True class="btn btn-info">
+            {% bootstrap_icon "ban-circle" %} Cancel
+           </button>
+        {% endbuttons %}
     </form>
 {% endblock %}

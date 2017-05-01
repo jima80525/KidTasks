@@ -1,12 +1,4 @@
-{% extends 'tasks/base.html' %}
+{% extends 'tasks/base_edit.html' %}
 
 {% block title %} Create Task {% endblock %}
-
-{% block content %}
-    <form method="POST" class="task-form"
-       action="{% if from %}?next={{ from }}{% endif %}" >
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-primary">Save</button>
-    </form>
-{% endblock %}
+{% block formName %}task-form {% endblock %}

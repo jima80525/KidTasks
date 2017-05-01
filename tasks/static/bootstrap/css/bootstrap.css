@@ -14,3 +14,21 @@ body {
 .kidname {
    font-size: 30px;
 }
+
+.list-group-item {
+  background-color: indigo;
+  padding: 2px 2px;
+}
+
+.list-group-item:last-child {
+   margin-left: 30px;
+}
+
+.list-group {
+   margin-bottom: 0px;
+   margin-left: 15px;
+}
+
+.page-header {
+   border-bottom-color: Purple;
+}

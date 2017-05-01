@@ -1,0 +1,19 @@
+{% extends 'tasks/base.html' %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{% block content %}
+    <form method="post" class="{% block formName %}(no form){% endblock %}"
+       action="{% if from %}?next={{ from }}{% endif %}" >
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      {% buttons %}
+        <button type="submit" class="btn btn-primary">
+          {% bootstrap_icon "pencil" %} Submit
+        </button>
+      {% endbuttons %}
+    </form>
+{% endblock %}

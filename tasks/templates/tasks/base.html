@@ -2,53 +2,53 @@
 <html>
 <div>
    <head>
-   {% load bootstrap3 %}
-   {% bootstrap_css %}
-   {% bootstrap_javascript %}
-   {% bootstrap_messages %}
+     {% load bootstrap3 %}
+     {% bootstrap_css %}
+     {% bootstrap_javascript %}
+     {% bootstrap_messages %}
 
-   <title>KidTasks</title>
+     <title>KidTasks</title>
    </head>
    <body>
 
-   <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container-fluid">
-         <!-- Brand and toggle get grouped for better mobile display -->
-         <div class="navbar-header">
-            <a class="navbar-brand" href="#">KidTasks</a>
-         </div>
+      <nav class="navbar navbar-default navbar-fixed-top">
+         <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+               <a class="navbar-brand" href="#">KidTasks</a>
+            </div>
 
-         <!-- Collect the nav links, forms, and other content for toggling -->
-         <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-               <li>
-               <a href="{% url 'task_new' %}?from={{ request.path|urlencode }}">Add New Task</a>
-               </li>
-               <li>
-               <a href="{% url 'rep_task_new' %}?from={{ request.path|urlencode }}">Add New Repeating Task</a>
-               </li>
-               <li>
-               <a href="{% url 'kid_new' %}?from={{ request.path|urlencode }}">Add New Kid</a>
-               </li>
-               <li>
-               <a href="{% url 'today' %}">View Today's Tasks</a>
-               </li>
-               <li>
-               <a href="{% url 'rep_tasks' %}">View All Tasks</a>
-               </li>
-            </ul>
-         </div><!-- /.navbar-collapse -->
-      </div><!-- /.container-fluid -->
-   </nav>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse">
+               <ul class="nav navbar-nav">
+                  <li>
+                  <a href="{% url 'task_new' %}?from={{ request.path|urlencode }}">Add New Task</a>
+                  </li>
+                  <li>
+                  <a href="{% url 'rep_task_new' %}?from={{ request.path|urlencode }}">Add New Repeating Task</a>
+                  </li>
+                  <li>
+                  <a href="{% url 'kid_new' %}?from={{ request.path|urlencode }}">Add New Kid</a>
+                  </li>
+                  <li>
+                  <a href="{% url 'today' %}">View Today's Tasks</a>
+                  </li>
+                  <li>
+                  <a href="{% url 'rep_tasks' %}">View Repeating Tasks</a>
+                  </li>
+               </ul>
+            </div><!-- /.navbar-collapse -->
+         </div><!-- /.container-fluid -->
+      </nav>
 
-   <br/>
-   <div class="page-header">
-      <h1>{% block title %}(no title){% endblock %}</h1>
-   </div>
+      <br/>
+      <div class="page-header">
+         <h1>{% block title %}(no title){% endblock %}</h1>
+      </div>
 
-   <div>
-      {% block content %}(no content){% endblock %}
-   </div>
+      <div>
+         {% block content %}(no content){% endblock %}
+      </div>
    </body>
 </div>
 </html>
