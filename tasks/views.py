@@ -31,7 +31,14 @@ def repeating_tasks(request):
     return render(request, 'tasks/repeating_tasks.html', {'kids': kids, })
 
 
+def kids(request):
+    """ Shows all of the kids in the system """
+    return render(request, 'tasks/kids.html',
+                  {'kids': get_list_of_kids(), })
+
+
 def new_repeating_task(request):
+    """ Generate a new repeating task """
     if request.method == "POST":
         form = RepeatingTaskForm(request.POST)
         if form.is_valid():
@@ -61,7 +68,23 @@ def new_repeating_task(request):
                   {'form': form, 'from': request.GET.get('from', None)})
 
 
+def update_kid(request, name):
+    """ Change name or last updated fields for a kid """
+    kid = get_object_or_404(Kid, name=name)
+    form = KidForm(request.POST or None, instance=kid)
+    if request.method == "POST":
+        if form.is_valid():
+            if 'delete' in request.POST:
+                kid.delete()
+            elif 'save' in request.POST:
+                form.save()
+            # ignore if the cancel button was pressed
+            return redirect(reverse('show_kids'))
+    return render(request, 'tasks/kid_update.html', {'form': form})
+
+
 def update_repeating_task(request, task_id):
+    """ Change fields in repeated task """
     task = get_object_or_404(RepeatingTask, id=task_id)
     form = RepeatingTaskForm(request.POST or None, instance=task)
     if request.method == "POST":

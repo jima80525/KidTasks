@@ -13,5 +13,8 @@ urlpatterns = [
     url(r'^repeatingtask/new$', views.new_repeating_task, name='rep_task_new'),
     url(r'^repeatingtask/update/(?P<task_id>[0-9]+)$',
         views.update_repeating_task, name='rep_task_update'),
+    url(r'^kids$', views.kids, name='show_kids'),
     url(r'^kid/new$', views.new_kid, name='kid_new'),
+    url(r'^kid/update/(?P<name>[a-zA-Z ]+)$',
+        views.update_kid, name='kid_update'),
 ]

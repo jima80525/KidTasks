@@ -1,0 +1,23 @@
+{% extends 'tasks/base.html' %}
+{# Load the tag library #}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+
+{% block title %} Kids {% endblock %}
+
+{% block content %}
+{% if kids %}
+    <ul class="list-group">
+        {% for kid in kids %}
+        <li class="list-group-item">
+           <a href="{% url 'kid_update' kid %}"> {{ kid }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No kids are present.</p>
+{% endif %}
+{% endblock %}
+
