@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from .models import Kid, RepeatingTask, Task
 from .forms import RepeatingTaskForm, TaskForm, KidForm
 
@@ -19,6 +20,7 @@ def get_list_of_kids():
     return kid_list
 
 
+@login_required
 def repeating_tasks(request):
     """ Shows all of the repeating tasks in the system, broken down by kid """
     # create a dict with an key for each kid.  The value associated with the
@@ -31,12 +33,14 @@ def repeating_tasks(request):
     return render(request, 'tasks/repeating_tasks.html', {'kids': kids, })
 
 
+@login_required
 def kids(request):
     """ Shows all of the kids in the system """
     return render(request, 'tasks/kids.html',
                   {'kids': get_list_of_kids(), })
 
 
+@login_required
 def new_repeating_task(request):
     """ Generate a new repeating task """
     if request.method == "POST":
@@ -68,9 +72,10 @@ def new_repeating_task(request):
                   {'form': form, 'from': request.GET.get('from', None)})
 
 
-def update_kid(request, name):
+@login_required
+def update_kid(request, kid_id):
     """ Change name or last updated fields for a kid """
-    kid = get_object_or_404(Kid, name=name)
+    kid = get_object_or_404(Kid, id=kid_id)
     form = KidForm(request.POST or None, instance=kid)
     if request.method == "POST":
         if form.is_valid():
@@ -83,6 +88,7 @@ def update_kid(request, name):
     return render(request, 'tasks/kid_update.html', {'form': form})
 
 
+@login_required
 def update_repeating_task(request, task_id):
     """ Change fields in repeated task """
     task = get_object_or_404(RepeatingTask, id=task_id)
@@ -98,6 +104,7 @@ def update_repeating_task(request, task_id):
     return render(request, 'tasks/repeating_task_update.html', {'form': form})
 
 
+@login_required
 def today(request):
     """ Generate the 'today' page showing which tasks are due today """
     day_name = datetime.datetime.now().strftime("%A")
@@ -112,6 +119,7 @@ def today(request):
     return render(request, 'tasks/today.html', {'kids': kids, 'day': day_name})
 
 
+@login_required
 def update_task(_, task_id):
     """ Invert the completed state of the specified task """
     task = get_object_or_404(Task, id=task_id)
@@ -120,6 +128,7 @@ def update_task(_, task_id):
     return HttpResponseRedirect(reverse('today'))
 
 
+@login_required
 def new_task(request):
     """ create a new task with a date """
     if request.method == "POST":
@@ -137,6 +146,7 @@ def new_task(request):
                   {'form': form, 'from': request.GET.get('from', None)})
 
 
+@login_required
 def new_kid(request):
     """ Create a new kid!  Sounds more exciting than it is. """
     if request.method == "POST":

@@ -12,7 +12,7 @@
     <ul class="list-group">
         {% for kid in kids %}
         <li class="list-group-item">
-           <a href="{% url 'kid_update' kid %}"> {{ kid }}</a>
+           <a href="{% url 'kid_update' kid.id %}"> {{ kid }}</a>
         </li>
         {% endfor %}
     </ul>
