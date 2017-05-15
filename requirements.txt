@@ -3,6 +3,7 @@ Django==1.10.2
 django-bootstrap3==8.2.2
 django-extensions==1.7.4
 gunicorn==19.7.1
+psycopg2==2.7.1
 pytz==2016.6.1
 sqlparse==0.2.2
 whitenoise==3.3.0
