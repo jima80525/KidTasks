@@ -24,11 +24,10 @@ class Kid(models.Model):
         ordering = ['name', ]
 
     def build_all_tasks(self):
+        """ Build a list of all tasks.  From:
+          http://stackoverflow.com/questions/4720079/django-query-filter-with-\
+          variable-column """
         tasks = []
-
-        # from
-        # http://stackoverflow.com/questions/4720079/django-query-filter-with-\
-        # variable-column
         for day in self.days:
             qs = RepeatingTask.objects.filter(kid=self).filter(**{day: True})
             tasks.append((day, [task for task in qs]))

@@ -1,12 +1,13 @@
-from django import template
+""" Filter to return items in sorted order """
 from collections import ItemsView
+from django import template
 
 register = template.Library()
 
 
 @register.filter
 def sort(value):
-    if isinstance(value, ItemsView) or isinstance(value, list):
+    """ The filter to return the sorted order of a list """
+    if isinstance(value, (ItemsView, list)):
         return sorted(value)
-    else:
-        return value
+    return value

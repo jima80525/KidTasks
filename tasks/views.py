@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """ Django views for the KidsTasks app. """
 import datetime
 # pylint: disable=E0401
@@ -26,11 +27,11 @@ def repeating_tasks(request):
     # create a dict with an key for each kid.  The value associated with the
     # kid will be a list of tuples:
     #     (day_name [list of tasks for that day])
-    kids = {}
+    kid_list = {}
     for kid in get_list_of_kids():
-        kids[kid.name] = kid.build_all_tasks()
+        kid_list[kid.name] = kid.build_all_tasks()
 
-    return render(request, 'tasks/repeating_tasks.html', {'kids': kids, })
+    return render(request, 'tasks/repeating_tasks.html', {'kids': kid_list, })
 
 
 @login_required
@@ -58,13 +59,13 @@ def new_repeating_task(request):
             # the repeated task for today
             kid.populate_today()
 
-            new_task = form.save()
-            kid.update_with_new_repeating_task(new_task, form.cleaned_data)
+            the_task = form.save()
+            kid.update_with_new_repeating_task(the_task, form.cleaned_data)
 
             # redirect to the page we were on before
-            next = request.GET.get('next', None)
-            if next:
-                return redirect(next)
+            next_task = request.GET.get('next', None)
+            if next_task:
+                return redirect(next_task)
             return redirect(reverse('rep_tasks'))
     else:
         form = RepeatingTaskForm()
@@ -109,14 +110,15 @@ def today(request):
     """ Generate the 'today' page showing which tasks are due today """
     day_name = datetime.datetime.now().strftime("%A")
 
-    kids = dict()
+    kid_list = dict()
     for kid in get_list_of_kids():
         kid.populate_today()  # get RepeatingTasks set up for today
         task_list = Task.objects.filter(kid=kid). \
             filter(date=datetime.datetime.today())
-        kids[kid.name] = [task for task in task_list]
+        kid_list[kid.name] = [task for task in task_list]
 
-    return render(request, 'tasks/today.html', {'kids': kids, 'day': day_name})
+    return render(request, 'tasks/today.html', {'kids': kid_list,
+                                                'day': day_name})
 
 
 @login_required
@@ -135,9 +137,9 @@ def new_task(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             form.save()
-            next = request.GET.get('next', None)
-            if next:
-                return redirect(next)
+            next_task = request.GET.get('next', None)
+            if next_task:
+                return redirect(next_task)
             # if for some reason it was not set, default to today
             return redirect(reverse('today'))
     else:
@@ -153,9 +155,9 @@ def new_kid(request):
         form = KidForm(request.POST)
         if form.is_valid():
             form.save()
-            next = request.GET.get('next', None)
-            if next:
-                return redirect(next)
+            next_task = request.GET.get('next', None)
+            if next_task:
+                return redirect(next_task)
             # if for some reason it was not set, default to today
             return redirect(reverse('today'))
     else:
